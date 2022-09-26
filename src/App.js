@@ -15,6 +15,12 @@ function App() {
   const [isAuth, setIsAuth] = useState(false);
   const [level, setLevel] = useState(1);
 
+  const [time, setTime] = useState(0);
+  const [running, setRunning] = useState(false);
+
+  const [leaders, setLeaders] = useState([]);
+  const [characters, setCharacters] = useState([]);
+
   const logOut = () => {
     signOut(auth)
       .then(() => {
@@ -24,17 +30,26 @@ function App() {
       })
   }
 
+  const formatTime = (time) => {
+    const hours = ('0' + Math.floor(time / 3600)).slice(-2);
+    const minutes = ('0' + Math.floor(time / 60) % 60).slice(-2);
+    const seconds = ('0' + (time % 60)).slice(-2)
+
+    return `${hours}:${minutes}:${seconds}`;
+  }
+
   return (
     <Router>
       <div className="header">
         <nav className='navbar'>
-          <Link to='/'>Home</Link>
+          {!running &&
+            <Link to='/'>Home</Link>
+          }
           {!isAuth ? (
             <Link to='/login'>Login</Link>
           ) : (
             <p className='logout-link' onClick={logOut}>Log Out</p>
           )}
-          <Link to='/game'>Game</Link>
         </nav>
         <div className="images">
             <div className='character'>
@@ -50,14 +65,12 @@ function App() {
               <p>Odlaw</p>
             </div>
         </div>
-        <div id="timer">
-          00:00:00
-        </div>
+        <div id="timer">{formatTime(time)}</div>
       </div>
       <Routes>
-        <Route path='/' element={<Home level={level} setLevel={setLevel} />} />
-        <Route path='/game' element={<Game level={level} setLevel={setLevel} />} />
-        <Route path='/leaderboard' element={<Leaderboard />} />
+        <Route path='/' element={<Home level={level} setLevel={setLevel} isAuth={isAuth} setTime={setTime} />} />
+        <Route path='/game' element={<Game level={level} isAuth={isAuth} time={time} setTime={setTime} running={running} setRunning={setRunning} characters={characters} setCharacters={setCharacters} formatTime={formatTime} />} />
+        <Route path='/leaderboard' element={<Leaderboard leaders={leaders} setLeaders={setLeaders} formatTime={formatTime} />} />
         <Route path='/login' element={<Login setIsAuth={setIsAuth} />} />
       </Routes>
     </Router>
