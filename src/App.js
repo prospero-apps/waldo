@@ -1,5 +1,5 @@
 import './style.css';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'; 
+import { HashRouter as Router, Routes, Route, Link } from 'react-router-dom'; 
 import Home from './pages/Home';
 import Game from './pages/Game';
 import Leaderboard from './pages/Leaderboard';
